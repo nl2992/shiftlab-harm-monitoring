@@ -29,7 +29,7 @@ selective-label harm monitoring. Target: TMLR.
    runs out.
 5. **A registered regime map with tested predictions.** Eight regimes, each with a registered
    prediction and falsification criterion, evaluated against a published/composed comparator panel
-   (Timans GRAPA, Xu active betting, PPE, empirical-Bernstein engines, SR/CUSUM). Gated HT/PPI with
+   (Timans GRAPA, Xu active betting, PPE, empirical-Bernstein engines). Gated HT/PPI with
    adaptive engines are the strongest selective-label arms; the PPI proxy adds nothing after gating.
 6. **Real-data behaviour on EIA.** All 68 registered per-path null cells passed (0/1,000 alarms;
    largest exact upper bound 0.30%). Under injected under-procurement, fixed disagreement gating

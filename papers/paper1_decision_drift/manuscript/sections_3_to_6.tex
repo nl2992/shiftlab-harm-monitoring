@@ -15,6 +15,8 @@ Labels cost money; the monitor holds a reserve equal to a fraction $r$ of the co
 \paragraph{Two query rules.}
 \emph{Uniform} labelling queries every event with probability $r$, giving the inverse-propensity increment
 $Z_t=-\varepsilon+L_tc_t/r$ with support bound $B_u=5.1(2/r-1)$ (the prediction-powered bound).
+The uniform comparator in the experiments adds a ridge proxy $h_t$, $Z_t=-\varepsilon+h_t+L_t(c_t-h_t)/r$, under the same bound;
+the growth calculation below takes $h_t=0$.
 \emph{Gated} labelling never queries an agreement, since its cost is known to be zero, and queries a disagreement with
 probability $q_t$, giving $Z_t=-\varepsilon+A_tL_tc_t/q_t$ with predictable support bound $B_t=5/q_t+\varepsilon$.
 Gating at rate $q_D=\min(1,r\,\bar\tau_{\mathrm{val}}/\overline{A\tau}_{\mathrm{val}})$ spends the same expected label budget
@@ -82,7 +84,9 @@ Scenarios are \texttt{stationary} and \texttt{benign\_nuisance} (null controls),
 Gated: Horvitz--Thompson at a fixed rate $q_D$ (\texttt{gated\_ht\_fixed}) and at an online-paced rate from a past-only $200$-event tariff window,
 clipped to $[0.10,1]$ (\texttt{gated\_ht\_paced}); a proxy-anchored variant; an empirical-Bernstein engine.
 Ungated: uniform labelling with a ridge proxy, and the variance-allocated policy.
-Published and composed comparators: Timans GRAPA, the prediction-powered e-value (PPE), Xu active betting, SR/CUSUM and a feature-drift sentinel, each given the same gating, correct bounds, label-dollar cap, query coins and proxy access.
+Published and composed comparators: Timans GRAPA, the prediction-powered e-value (PPE)~\citep{csillag2025}, and Xu active betting~\citep{xu2024active},
+each given the same gating, correct bounds, label-dollar cap, query coins and proxy access.
+A label-free feature-drift sentinel is recorded as a distribution-shift diagnostic; it targets a different null and is not ranked.
 Full feedback and a never-alarming monitor are unmatched references.
 The reserve is a hard stop: processing ends when the remaining budget falls below the largest label price.
 
@@ -125,8 +129,8 @@ Xu active & 0.00 & 1{,}616 & 115 \\
 \end{table}
 
 \paragraph{Registered regimes.}
-The regime map predicted that past-paced gating would hold coverage better than a fixed rate when disagreement rises (regime R7). Under \texttt{harmful\_adaptation} fixed gating was equal or better at every budget
-($0.86$ against $0.76$ detection at $r=0.10$), and Section~\ref{sec:pacing} follows up this result.
+The regime map predicted that past-paced gating would hold coverage better than a fixed rate when disagreement rises (regime R7). Under \texttt{harmful\_adaptation} the simpler fixed rate was equal or better in detection at every budget
+($0.86$ against $0.76$ at $r=0.10$). Section~\ref{sec:pacing} follows up this result and identifies what each rule is good for.
 
 \paragraph{Panel.}
 Every gated arm dominates every ungated arm at scarce budgets: at $r\le0.05$ gated arms detect $0.82$--$1.00$ and ungated arms $0.00$--$0.01$.
@@ -154,6 +158,13 @@ The fixed monitor's horizon shrinks monotonically with $s$ at every budget (at $
 A lower $q$ raises the support bound $5/q$, so each label carries less evidence: the range penalty of Section~\ref{sec:prediction} acting on time.
 At full strength, censored delay is $598$ (fixed) against $1{,}166$ (paced) events at $r=0.10$, and $401$ against $637$ at $r=0.20$; at $s=0.75$ it is $974$ against $1{,}347$ and $567$ against $783$.
 Fixed gating is the faster detector whenever the budget can afford its disagreements; pacing is the choice only when the monitor must keep running past the burst.
+
+\paragraph{A higher floor tunes the trade-off.}
+In an exploratory follow-up, chosen after the sweep and run on $100$ fresh streams per cell (seeds $62000000$--$62000099$; $s\in\{0.75,1\}$), we raised the
+pacer's floor on $q$ from $0.10$ to $0.40$. At $r=0.10$ censored delay falls from $1{,}352$ to $1{,}226$ events at $s=0.75$ and from $1{,}194$ to $945$ at $s=1$,
+detection stays similar ($0.55$ to $0.56$, and $0.79$ to $0.77$), and the monitor still processes about $1.5\times$ as many events as fixed gating, which remains the faster detector (censored delay $917$ and $769$).
+At $r=0.05$ the delay gain is smaller ($3$--$7\%$), and at $r=0.20$ the floor has no material effect. The floor is therefore a dial between delay and horizon
+that a deployment can set in advance.
 
 \begin{table}[t]
 \centering
