@@ -71,7 +71,7 @@ BX, BW = 140, 238
 M = SEM["magenta"]
 # green: growth definition
 S.rect(BX, 30, BW, 44, fill=SEM["cost_l"], stroke=SEM["cost"], sw=1.5, rx=8)
-S.text(BX + BW / 2, 49, "<i>G</i> = <i>E</i> log( 1 + <i>s</i> <i>Z</i> / <i>B</i> )", size=12, family=SERIF, anchor="middle")
+S.text(BX + BW / 2, 49, "<i>G</i> = <i>E</i> log( 1 + <i>λ</i> <i>Z</i> / <i>B</i> )", size=12, family=SERIF, anchor="middle")
 S.text(BX + BW / 2, 65, "per-event log-growth of the betting e-process", size=9.2, anchor="middle", fill=C["mid"])
 # pink: uniform
 S.rect(BX, 82, BW, 64, fill=SEM["uniform_l"], stroke=SEM["uniform"], sw=1.5, rx=8)

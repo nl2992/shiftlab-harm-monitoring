@@ -9,22 +9,22 @@ A deployed policy $\pi$ and a reference policy $\pi_{\mathrm{ref}}$ act on a str
 decision cost $c_t = \mathrm{cost}(\pi(X_t),Y_t)-\mathrm{cost}(\pi_{\mathrm{ref}}(X_t),Y_t)\in[-5,5]$ is observed only
 when a label is bought. Let $A_t=\mathbf 1[\pi(X_t)\neq\pi_{\mathrm{ref}}(X_t)]$ be the disagreement indicator and $\rho=\Pr(A_t=1)$.
 Because the cost depends on the prediction and the label only, $c_t=0$ whenever $A_t=0$. The null is
-$\mathbb E[c_t\mid\mathcal F_{t-1}]\le\varepsilon$, and the monitor raises an alarm when a betting e-process crosses $1/\alpha$.
+$\mathbb E[c_t\mid\mathcal F_{t-1}]\le\varepsilon$, and the monitor raises an alarm when a betting e-process crosses $1/\alpha$ for a chosen level $\alpha$.
 Labels cost money; the monitor holds a reserve equal to a fraction $r$ of the cost of labelling every event.
 
 \paragraph{Two query rules.}
 \emph{Uniform} labelling queries every event with probability $r$, giving the inverse-propensity increment
-$Z_t=-\varepsilon+L_tc_t/r$ with support bound $B_u=5.1(2/r-1)$ (the prediction-powered bound).
+$Z_t=-\varepsilon+L_tc_t/r$, where $L_t\in\{0,1\}$ records whether the label is bought, with support bound $B_u=5.1(2/r-1)$ (the prediction-powered bound).
 The uniform comparator in the experiments adds a ridge proxy $h_t$, $Z_t=-\varepsilon+h_t+L_t(c_t-h_t)/r$, under the same bound;
 the growth calculation below takes $h_t=0$.
 \emph{Gated} labelling never queries an agreement, since its cost is known to be zero, and queries a disagreement with
 probability $q_t$, giving $Z_t=-\varepsilon+A_tL_tc_t/q_t$ with predictable support bound $B_t=5/q_t+\varepsilon$.
-Gating at rate $q_D=\min(1,r\,\bar\tau_{\mathrm{val}}/\overline{A\tau}_{\mathrm{val}})$ spends the same expected label budget
-as uniform labelling at rate $r$ ($\tau$ is the label price).
+Gating at rate $q_D=\min(1,r\,\bar\kappa_{\mathrm{val}}/\overline{A\kappa}_{\mathrm{val}})$ spends the same expected label budget
+as uniform labelling at rate $r$ ($\kappa_t$ is the price of label $t$, and bars are validation-window means).
 
 \paragraph{Growth.}
-With stake $s$ the e-process multiplies by $1+sZ_t/B_t$, so the per-event growth is
-$G(s)=\mathbb E\log(1+sZ_t/B_t)$ and the monitor uses the stake grid $\{0.05,0.1,0.2,0.4,0.8\}$.
+With stake $\lambda$ the e-process multiplies by $1+\lambda Z_t/B_t$, so the per-event growth is
+$G(\lambda)=\mathbb E\log(1+\lambda Z_t/B_t)$ and the monitor uses the stake grid $\{0.05,0.1,0.2,0.4,0.8\}$.
 For an interior optimum, $G\approx\mu^2/(2\,\mathbb E Z^2)$ with $\mu$ the mean excess cost, so the ratio of growth rates is
 the ratio of second moments:
 \[
@@ -36,9 +36,9 @@ When the budget covers every disagreement ($q_D=1$) it is $1/r$. In both regimes
 $\min(1/\rho,1/r)$. This is the $1/\rho$ label saving of paired auditing~\citep{discern}, restated as an evidence-growth ratio at matched spend.
 
 \paragraph{Support bounds enlarge the gain.}
-A bounded e-process cannot stake more than $B$ allows: with a stake grid capped at $0.8$ the effective bet per unit of $Z$ is $s/B$.
+A bounded e-process cannot stake more than $B$ allows: with a stake grid capped at $0.8$ the effective bet per unit of $Z$ is $\lambda/B$.
 The uniform arm's bound $B_u=5.1(2/r-1)$ is $9$--$24\times$ larger than the gated arm's across the four budgets, so its stakes are
-pinned near the cap. Active inverse-propensity e-processes carry the same range condition, $\lambda\le(1/q_{\min}-\theta)^{-1}$~\citep{xu2024active}.
+pinned near the cap. Active inverse-propensity e-processes carry the same range condition, $\lambda\le(1/q_{\min}-\theta)^{-1}$, with $\theta$ their risk level~\citep{xu2024active}.
 We compute $G$ exactly, enumerating the query coin, for each arm with its own bound and the registered grid on the realised post-onset
 paths of the first 20 \texttt{boundary\_local\_harm} comparison streams. Table~\ref{tab:prediction} gives the result.
 
@@ -81,10 +81,10 @@ Scenarios are \texttt{stationary} and \texttt{benign\_nuisance} (null controls),
 (stationary outcomes, with a policy intervention at event $1600$ that sets actions positive and lifts disagreement from about $8\%$ to $41\%$).
 
 \paragraph{Arms.}
-Gated: Horvitz--Thompson at a fixed rate $q_D$ (\texttt{gated\_ht\_fixed}) and at an online-paced rate from a past-only $200$-event tariff window,
+Gated: Horvitz--Thompson (HT) at a fixed rate $q_D$ (\texttt{gated\_ht\_fixed}) and at an online-paced rate from a past-only $200$-event tariff window,
 clipped to $[0.10,1]$ (\texttt{gated\_ht\_paced}); a proxy-anchored variant; an empirical-Bernstein engine.
-Ungated: uniform labelling with a ridge proxy, and the variance-allocated policy.
-Published and composed comparators: Timans GRAPA, the prediction-powered e-value (PPE)~\citep{csillag2025}, and Xu active betting~\citep{xu2024active},
+Ungated: uniform labelling with a ridge proxy (prediction-powered inference, PPI~\citep{angelopoulos2023ppi}), and the variance-allocated policy.
+Published and composed comparators: Timans GRAPA (growth-rate adaptive betting~\citep{waudbysmith2024}), the prediction-powered e-value (PPE)~\citep{csillag2025}, and Xu active betting~\citep{xu2024active},
 each given the same gating, correct bounds, label-dollar cap, query coins and proxy access.
 A label-free feature-drift sentinel is recorded as a distribution-shift diagnostic; it targets a different null and is not ranked.
 Full feedback and a never-alarming monitor are unmatched references.
@@ -187,7 +187,7 @@ $r$ & fixed & paced & fixed & paced & fixed & paced \\
 \begin{figure}[t]
 \centering
 \includegraphics[width=\linewidth]{figures/fig_pacing2.pdf}
-\caption{Pacing keeps the monitor alive longer but does not make it detect more often or sooner. \textbf{a} One registered \texttt{harmful\_adaptation} stream ($s=1$, $r=0.10$, seed $61000000$): the fixed-rate monitor's label reserve runs dry at event $1{,}248$ and it alarms at $1{,}217$; the paced monitor is still watching at event $2{,}195$ and alarms at $2{,}054$.
+\caption{Pacing trades detection delay for monitoring horizon at equal detection rates. \textbf{a} One registered \texttt{harmful\_adaptation} stream ($s=1$, $r=0.10$, seed $61000000$): the fixed-rate monitor's label reserve runs dry at event $1{,}248$ and it alarms at $1{,}217$; the paced monitor is still watching at event $2{,}195$ and alarms at $2{,}054$.
 \textbf{b} Pooled over $r\in\{0.05,0.10\}$ and $s\ge0.5$ (100 seeds per cell), fixed minus paced detection has a bootstrap $95\%$ interval containing zero at every strength. \textbf{c} Censored detection delay where both monitors detect.}
 \label{fig:pacing}
 \end{figure}
@@ -201,6 +201,6 @@ Pre-onset alarm rates stay at or below $1/100$ per cell for every primary arm (e
 \begin{figure}[t]
 \centering
 \includegraphics[width=\linewidth]{figures/fig_map2.pdf}
-\caption{Gated monitors are detectable once the budget reaches the disagreements the intervention creates. \textbf{a} Detection probability by label budget and intervention strength under \texttt{harmful\_adaptation} (100 streams per cell); the dashed line encloses cells with detection at least $0.5$, and at $r\le0.05$ no strength passes $0.29$. \textbf{b} Detection against strength for three budgets (gated, blue) and for uniform labelling at $r=0.20$ (red, dashed); uniform labelling detects $0.00$ at $r\le0.05$.}
+\caption{Gated monitors detect the harm once the budget reaches the disagreements the intervention creates. \textbf{a} Detection probability by label budget and intervention strength under \texttt{harmful\_adaptation} (100 streams per cell); the dashed line encloses cells with detection at least $0.5$, and at $r\le0.05$ no strength passes $0.29$. \textbf{b} Detection against strength for three budgets (gated, blue) and for uniform labelling at $r=0.20$ (red, dashed); uniform labelling detects $0.00$ at $r\le0.05$.}
 \label{fig:map}
 \end{figure}
