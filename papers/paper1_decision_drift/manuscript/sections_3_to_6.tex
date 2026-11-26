@@ -38,13 +38,13 @@ A bounded e-process cannot stake more than $B$ allows: with a stake grid capped 
 The uniform arm's bound $B_u=5.1(2/r-1)$ is $9$--$24\times$ larger than the gated arm's across the four budgets, so its stakes are
 pinned near the cap. Active inverse-propensity e-processes carry the same range condition, $\lambda\le(1/q_{\min}-\theta)^{-1}$~\citep{xu2024active}.
 We compute $G$ exactly, enumerating the query coin, for each arm with its own bound and the registered grid on the realised post-onset
-paths of the \texttt{boundary\_local\_harm} scenario (20 seeds per budget). Table~\ref{tab:prediction} gives the result.
+paths of the first 20 \texttt{boundary\_local\_harm} comparison streams. Table~\ref{tab:prediction} gives the result.
 
 \begin{table}[t]
 \centering\small
 \caption{Gated-to-uniform evidence-growth ratio. ``Small-signal'' is $\min(1/\rho,1/r)$ with $\rho=0.084$;
 ``uncapped'' maximises the stake continuously; ``registered grid'' uses the monitor's stake grid and each arm's support bound.
-The registered prediction was made before any run.}
+The registered prediction was made before any monitor run.}
 \label{tab:prediction}
 \begin{tabular}{lrrrrr}
 \toprule
@@ -62,7 +62,7 @@ $r$ & Small-signal & Uncapped & Reg.\ grid & Reg.\ prediction & Measured \\
 \centering
 \includegraphics[width=\linewidth]{figures/fig_growth2.pdf}
 \caption{The gating gain is predicted within $15\%$ at every label budget. \textbf{a} At the same label spend $r$, gated and uniform labelling differ in the second moment of the increment $Z$ and in its support bound $B$ (bars drawn to scale at $r=0.20$); changed terms are in magenta.
-\textbf{b} Gated-to-uniform evidence growth: the variance ratio fixes the order of magnitude, the growth calculation with each arm's bound and the registered stake grid tracks the measured ratio, and the registered prediction (red diamonds) was made before any run.}
+\textbf{b} Gated-to-uniform evidence growth: the variance ratio fixes the order of magnitude, the growth calculation with each arm's bound and the registered stake grid tracks the measured ratio, and the registered prediction (red diamonds) was made before any monitor run.}
 \label{fig:growth}
 \end{figure}
 
@@ -92,6 +92,8 @@ Calibration used $2{,}000$ streams per null scenario and budget cell with a simu
 The comparison used $100$ fresh streams per scenario and budget (seeds $58400000$--$58400099$) with two co-primary endpoints:
 the post-onset growth ratio at $r=0.20$ (one-sided $97.5\%$ lower bound $\ge2$) and the paired detection difference at $r=0.05$ (lower bound $>0$).
 A fidelity stage reproduced the historic uniform-PPI crossings (6/60 at bound 96.9, 47/60 at bound 45.9) exactly before any fresh stream was generated.
+One numerical-tolerance amendment was recorded before any comparison outcome was available: an increment that exceeds its support bound
+by floating-point rounding (at most $10^{-9}$ relative) is set to the bound. The estimand, arms, thresholds and seeds are unchanged.
 
 \section{Gating results}\label{sec:gating}
 

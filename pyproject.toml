@@ -15,7 +15,9 @@ drift = ["river>=0.21"]
 neural = ["torch>=2.2"]
 
 [tool.setuptools.packages.find]
-where = ["src"]
+# `scripts` is installed too: parts of `shiftlab` import from it.
+where = ["src", "."]
+include = ["shiftlab*", "scripts*"]
 
 [tool.pytest.ini_options]
 testpaths = ["tests"]

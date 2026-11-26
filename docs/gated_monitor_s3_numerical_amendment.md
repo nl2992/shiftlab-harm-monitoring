@@ -6,7 +6,7 @@
 ## What happened
 
 Two S3 launches on the registered block `58400000–58400099` stopped without writing any outputs:
-- the GPT agent's launch at 2026-10-27T20:12:11Z, kept as
+- the first launch at 2026-10-27T20:12:11Z, kept as
   `outputs/gated_monitor_compare_aborted_20261027T201211Z/launch.json`;
 - the relaunch at 20:47Z, which ran about 30 minutes and raised `ValueError: observed value is
   outside the declared bounded range` from `PredictableBoundMeanEProcess.update`, called by
