@@ -128,6 +128,12 @@ Xu active & 0.00 & 1{,}616 & 115 \\
 \end{tabular}
 \end{table}
 
+\paragraph{Replication.}
+We reran the comparison's seeds on a second random generator (CPU in place of CUDA), which gives new streams. Both co-primary endpoints pass again:
+the growth ratio at $r=0.20$ is $7.77\times$ ($95\%$ interval $7.38$--$8.20$) and gating wins $100$ discordant streams to none at $r=0.05$.
+The measured ratios across budgets ($21.4/19.1/15.2/7.8$) are within $7\%$ of the growth calculation of Table~\ref{tab:prediction} and within $19\%$ of the registered prediction.
+At $r\le0.05$ gated HT arms detect $0.80$ to $1.00$ and ungated arms at most $0.03$.
+
 \paragraph{Registered regimes.}
 The regime map predicted that past-paced gating would hold coverage better than a fixed rate when disagreement rises (regime R7). Under \texttt{harmful\_adaptation} the simpler fixed rate was equal or better in detection at every budget
 ($0.86$ against $0.76$ at $r=0.10$). Section~\ref{sec:pacing} follows up this result and identifies what each rule is good for.
