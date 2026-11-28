@@ -242,12 +242,14 @@ def comparison_seed(
     budget_rate: float,
     device: str,
     adaptation_strength: float = 1.0,
+    deployed_threshold: float = 0.5,
 ) -> list[dict]:
     """Generate one shared path; evaluator truth is used only for summary endpoints.
 
     ``adaptation_strength`` is the probability that a post-intervention event is forced to the
     positive action under ``harmful_adaptation``. The default 1.0 is the registered scenario and
     draws no extra randomness, so earlier results are unchanged.
+    ``deployed_threshold`` sets the deployed classifier's cut-off; 0.5 is the registered pair.
     """
     if not 0 < adaptation_strength <= 1:
         raise ValueError("adaptation_strength must lie in (0,1]")
@@ -276,7 +278,7 @@ def comparison_seed(
     _, frame, oracle, timing = _generate(scenario, seed, base)
     x = np.stack(frame.features.to_numpy()).astype(float)
     y = frame.target.to_numpy(dtype=float) > 0
-    deployed = (ndtr((x[:, 0] - 0.9 * x[:, 1]) / 0.3) >= 0.5).astype(int)
+    deployed = (ndtr((x[:, 0] - 0.9 * x[:, 1]) / 0.3) >= deployed_threshold).astype(int)
     if scenario.harmful_adaptation:
         if adaptation_strength >= 1:
             deployed[1600:] = 1

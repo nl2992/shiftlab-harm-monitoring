@@ -133,7 +133,7 @@ ax.set_xticks(range(len(ss)), ["%g" % s for s in ss])
 ax.set_xlabel("intervention strength $s$")
 ax.set_ylabel("detection, fixed − paced")
 ax.set_ylim(-0.16, 0.2)
-ax.text(1, 0.15, "equal detection", ha="center", fontsize=9.5, fontweight="bold", fontstyle="italic", color=SEM["ours"])
+ax.text(1, 0.15, "similar detection", ha="center", fontsize=9.5, fontweight="bold", fontstyle="italic", color=SEM["ours"])
 svg_b = to_svg(fig)
 
 fig, ax = plt.subplots(figsize=(4.4, 1.75))

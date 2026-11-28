@@ -10,10 +10,10 @@ selective-label harm monitoring. Target: TMLR.
    correctly bounded uniform monitor at r = 0.20 (95% interval 6.88-7.55), and wins 100 to 0
    in discordant detection comparisons at r = 0.05 (McNemar p = 7.9e-31). Null calibration passed on
    2,000 streams per cell.
-2. **The gain has a closed form that predicts it.** Per-event log-growth of an IPW betting
+2. **The gain is predicted in advance and explained by per-event growth.** Per-event log-growth of an IPW betting
    e-process, with each arm's own support bound (5/q + eps for gated HT, 5.1(2/r - 1) for uniform)
    and the registered stake grid, gives gated/uniform growth ratios of 20.0 / 19.7 / 15.5 / 7.6 on
-   the real paths at r = 0.02 / 0.05 / 0.10 / 0.20. The registered prediction was 18 / 18 / 15 / 7.5
+   20 synthetic comparison streams at r = 0.02 / 0.05 / 0.10 / 0.20. The registered prediction was 18 / 18 / 15 / 7.5
    and the measured ratios 17.5 / 20.6 / 14.7 / 7.2. The same range penalty (bound growing as 1/q)
    explains both the gating gain and the pacing result below.
 3. **Pacing converts label budget into reserve horizon, not detection.** Across 5 intervention
@@ -29,7 +29,7 @@ selective-label harm monitoring. Target: TMLR.
    runs out.
 5. **A registered regime map with tested predictions.** Eight regimes, each with a registered
    prediction and falsification criterion, evaluated against a published/composed comparator panel
-   (Timans GRAPA, Xu active betting, PPE, empirical-Bernstein engines, SR/CUSUM). Gated HT/PPI with
+   (Timans GRAPA, Xu active betting, PPE, empirical-Bernstein engines). Gated HT/PPI with
    adaptive engines are the strongest selective-label arms; the PPI proxy adds nothing after gating.
 6. **Real-data behaviour on EIA.** All 68 registered per-path null cells passed (0/1,000 alarms;
    largest exact upper bound 0.30%). Under injected under-procurement, fixed disagreement gating

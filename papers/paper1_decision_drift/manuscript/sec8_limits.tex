@@ -1,5 +1,12 @@
-\section{Limitations}\label{sec:limits}
+\section{Conclusion}\label{sec:limits}
 
-The synthetic streams use imposed costs and a single deployed-versus-reference pair per scenario, and the EIA paths are previously examined development windows
-with costs imposed on a forecasting task. A prospective, operator-costed deployment is the next test. At budgets of $5\%$ or less no selective monitor reaches useful detection
-under a strong intervention, so those regimes need more labels or a different signal.
+Paired disagreement gating pays when disagreements are rare relative to the stream and the budget can reach them, and its gain can be anticipated before deployment
+from the disagreement rate, the label budget and the two support bounds. The results suggest three choices for an operator. Gate on disagreement before choosing a betting engine,
+since every gated arm outperforms every ungated one at scarce budgets on localised harm. Use a fixed gating rate when the aim is the earliest alarm, and a paced rate, with its floor
+set in advance, when the monitor must keep running through a burst of disagreement. Provision the label budget from the detectability map for the interventions that matter, or, for other streams, from a labelled pilot under an assumed post-change distribution, through the alarm-time rule of Section~\ref{sec:gating}.
+
+\paragraph{Scope and next steps.}
+
+The synthetic streams use imposed costs and one data generator, with two deployed thresholds and several intervention strengths, and the EIA paths are previously examined development windows
+with costs imposed on a forecasting task. A prospective, operator-costed deployment is the next test. For this generator, the detectability map locates the useful region under a strong intervention above a $5\%$ budget;
+extending it to scarcer budgets is a natural direction, through more informative signals than the paired cost alone.
