@@ -22,6 +22,12 @@ probability $q_t$, giving $Z_t=-\varepsilon+A_tL_tc_t/q_t$ with predictable supp
 Gating at rate $q_D=\min(1,r\,\bar\kappa_{\mathrm{val}}/\overline{A\kappa}_{\mathrm{val}})$ spends in expectation the same label budget
 as uniform labelling at rate $r$, or less when $q_D=1$ ($\kappa_t$ is the price of label $t$, and bars are validation-window means).
 
+\paragraph{Delayed labels.}
+Neither gated HT rule uses an outcome to decide what to query or how to bound an increment: the fixed rate comes from validation data, and the paced rate from past disagreements and tariffs.
+So if every label arrives $d$ events late and increments are processed in event order, the monitor computes the same e-process $d$ events later.
+The guarantee is a statement about that path in event order, so it needs the same condition as before, $\mathbb E[c_t\mid\text{earlier events}]\le\varepsilon$, and query and bound choices that use no outcome; the delay changes only when each term is seen.
+Under these, validity is unchanged and each alarm comes exactly $d$ events later; within a fixed window, an alarm due in its last $d$ events falls outside it.
+
 \paragraph{Growth.}
 With stake $\lambda$ the e-process multiplies by $1+\lambda Z_t/B_t$, so the per-event growth is
 $G(\lambda)=\mathbb E\log(1+\lambda Z_t/B_t)$ and the monitor uses the stake grid $\{0.05,0.1,0.2,0.4,0.8\}$.
@@ -80,7 +86,7 @@ The deployed classifier uses a fixed $0.5$ threshold; the reference is the cost-
 (false-negative cost $5$, false-positive cost $1$, tariffs in $[0.5,2.5]$, tolerance $\varepsilon=0.1$, $\alpha=0.05$).
 Scenarios are \texttt{stationary} and \texttt{benign\_nuisance} (null controls), \texttt{boundary\_local\_harm}
 (an adverse conditional-mean increase localised near the source decision boundary), and \texttt{harmful\_adaptation}
-(stationary outcomes, with a policy intervention at event $1600$ that sets actions positive and lifts disagreement from about $9\%$ to $42\%$).
+(stationary outcomes, with a policy intervention at event $1600$ that sets actions positive and lifts disagreement from about $9\%$ to $42\%$ on the comparison streams).
 
 \paragraph{Arms.}
 Gated: Horvitz--Thompson (HT) at a fixed rate $q_D$ (\texttt{gated\_ht\_fixed}) and at an online-paced rate from a past-only $200$-event tariff window,
@@ -149,31 +155,62 @@ at $r=0.05$ it leads with the registered engine ($0.20$ against $0.05$) and is i
 Uniform HT raised no alarm in the null cells ($100$ streams each).
 
 \paragraph{The prediction at other disagreement rates.}
-In a further exploratory study ($2{,}400$ fresh streams, seeds $63100000$--$63100099$ per setting), we changed the disagreement rate through the deployed threshold ($0.35$ in place of $0.5$) and through the intervention strength ($s=0.50,0.75,1$).
-Before any monitor run we fixed the prediction $q/r$ against uniform HT without a proxy, with $q=\min\{1,\max(0.10,r/\rho)\}$, which equals $\min(1/\rho,1/r)$ unless the pacer's floor binds, and a $15\%$ tolerance.
+In a further exploratory study we changed the disagreement rate through the deployed threshold ($0.35$ in place of $0.5$) and through the intervention strength ($s=0.50,0.75,1$), in two blocks of $2{,}400$ fresh streams each (seeds $63100000$--$63100099$ and $63200000$--$63200099$ per setting).
+Before each block we fixed the prediction $q/r$ against uniform HT without a proxy, with $q=\min\{1,\max(0.10,r/\rho)\}$, which equals $\min(1/\rho,1/r)$ unless the pacer's floor binds, and a $15\%$ tolerance.
 Here $\rho$ is the post-onset disagreement rate; it needs no labels, though under an intervention it is seen only once the intervention happens.
-Measured growth is the best fixed stake per stream on the common post-onset window, averaged over streams.
-The prediction holds in $15$ of $20$ cells, including all ten at $r\ge0.10$ (within $12\%$; Table~\ref{tab:rho}), and gated detection is at least uniform detection in every cell.
-The five misses are at $r\le0.05$ and fall below the prediction.
-A post-hoc diagnostic points mainly to the estimator: choosing each stream's stake after seeing its path inflates a small, noisy growth rate, here more for the uniform arm, and applying it to simulated query coins on the same paths reproduces most of the shortfall in four of the five cells.
-No arm alarmed in the stationary check at threshold $0.35$.
+Measured growth takes the best fixed stake per stream on the common post-onset window, averaged over streams.
+Before the second block we added a second estimator with less room for hindsight: one stake per arm per cell, chosen on the average over the $100$ streams.
+All ten cells at $r\ge0.10$ are within tolerance with the per-stream estimator in both blocks, and with the one-stake estimator in the second (Table~\ref{tab:rho}).
+Over all $20$ cells, the per-stream estimator is within tolerance in $15$ in each block and the one-stake estimator in $17$ of the second;
+of its three remaining cells, two are above the prediction (by $16\%$ and $18\%$) and one, where the floor binds, is $22\%$ below.
+Intervals (Table~\ref{tab:rhoci}) are widest at the smallest budgets (setting A at $r=0.02$: $13$--$60$ for the one-stake estimate).
+Gated detection is at least uniform detection in every cell of both blocks, and no arm alarmed in the stationary check at threshold $0.35$.
 
 \begin{table}[!h]
 \centering\small
-\caption{Gated-to-uniform (no proxy) growth ratio, measured / predicted. $\dagger$ outside the $15\%$ tolerance; $*$ pacer floor binds.}
+\caption{The gain tracks its prediction at budgets of $10\%$ or more across disagreement rates. Entries are gated-to-uniform (no proxy) growth ratios; $\rho$ and ``predicted'' are from the second block (first-block predictions are within $3\%$ of them); each block is judged against its own prediction. ``One stake'' picks one grid stake per arm per cell. $\dagger$ outside the $15\%$ tolerance; $*$ pacer floor binds.}
 \label{tab:rho}
-\begin{tabular}{llrcccc}
+\begin{tabular}{llcccc}
 \toprule
-Setting & Change & $\rho$ & $r=0.02$ & $r=0.05$ & $r=0.10$ & $r=0.20$ \\
+Setting & Row & $r=0.02$ & $r=0.05$ & $r=0.10$ & $r=0.20$ \\
 \midrule
-A & threshold $0.35$ & 0.05 & $10.4/19.9^\dagger$ & $14.8/19.9^\dagger$ & $9.8/10.0$ & $5.0/5.0$ \\
-B & registered pair & 0.08 & $9.1/11.9^\dagger$ & $12.3/11.9$ & $10.0/10.0$ & $5.1/5.0$ \\
-C & $s=0.50$ & 0.25 & $3.5/5.0^{*\dagger}$ & $3.3/4.0^\dagger$ & $3.8/4.0$ & $3.9/4.0$ \\
-D & $s=0.75$ & 0.34 & $4.4/5.0^*$ & $3.1/3.0$ & $3.1/3.0$ & $3.1/3.0$ \\
-E & $s=1$ & 0.42 & $4.5/5.0^*$ & $2.5/2.4$ & $2.7/2.4$ & $2.5/2.4$ \\
+A: threshold $0.35$, $\rho=0.05$ & predicted & 19.6 & 19.6 & 10.0 & 5.0 \\
+ & first block & $10.4^\dagger$ & $14.8^\dagger$ & 9.8 & 5.0 \\
+ & second block & $12.5^\dagger$ & $15.8^\dagger$ & 8.6 & 5.0 \\
+ & second, one stake & $22.6^\dagger$ & 22.4 & 9.8 & 5.3 \\
+\addlinespace
+B: registered pair, $\rho=0.09$ & predicted & 11.6 & 11.6 & 10.0 & 5.0 \\
+ & first block & $9.1^\dagger$ & 12.3 & 10.0 & 5.1 \\
+ & second block & 10.6 & $13.4^\dagger$ & 9.8 & 5.1 \\
+ & second, one stake & 11.3 & $13.7^\dagger$ & 9.8 & 5.1 \\
+\addlinespace
+C: $s=0.50$, $\rho=0.25$ & predicted & 5.0$^*$ & 4.0 & 4.0 & 4.0 \\
+ & first block & $3.5^\dagger$ & $3.3^\dagger$ & 3.8 & 3.9 \\
+ & second block & $3.4^\dagger$ & 3.9 & 3.8 & 3.6 \\
+ & second, one stake & $3.9^\dagger$ & 4.1 & 3.8 & 3.7 \\
+\addlinespace
+D: $s=0.75$, $\rho=0.33$ & predicted & 5.0$^*$ & 3.0 & 3.0 & 3.0 \\
+ & first block & 4.4 & 3.1 & 3.1 & 3.1 \\
+ & second block & $4.0^\dagger$ & 3.1 & 3.2 & 3.1 \\
+ & second, one stake & 4.6 & 3.2 & 3.2 & 3.2 \\
+\addlinespace
+E: $s=1$, $\rho=0.41$ & predicted & 5.0$^*$ & 2.4 & 2.4 & 2.4 \\
+ & first block & 4.5 & 2.5 & 2.7 & 2.5 \\
+ & second block & 4.8 & 2.7 & 2.7 & 2.7 \\
+ & second, one stake & 5.3 & 2.7 & 2.7 & 2.7 \\
 \bottomrule
 \end{tabular}
 \end{table}
+
+\paragraph{Predicting the alarm time.}
+The growth quantities also give a time. For each grid stake let $g_0$ and $g_1$ be the expected per-event log-growth before and after onset, at each period's query rate and with the query coin enumerated; the predicted alarm is the first post-onset event $T$ at which
+$\tfrac15\sum_\lambda \exp\{800\,g_0(\lambda)+T\,g_1(\lambda)\}\ge 1/\alpha$.
+The rule has no fitted parameter. Its inputs come from labelled pilot streams that include the post-change distribution, as in a power analysis.
+We computed $T$ from the paths of the first block for $40$ arm-cells (one arm, gated or uniform, in one of five settings at one of four budgets) and, before opening the second block's results, fixed the reading:
+$T\le800$ means detection at least $0.8$ and a median censored delay within $25\%$ of $T$; $T>1600$, beyond the window, means detection below $0.5$; in between there is no claim.
+The reading holds in $28$ of the $32$ arm-cells that carry a claim ($3$ of $4$ delay claims, $25$ of $28$ non-detection claims; $16$ of $16$ uniform and $12$ of $16$ gated).
+All four failures are on the safe side, with gated monitors doing better than predicted near a band edge: predicted times of $1{,}641$ and $1{,}693$ with detection $0.53$--$0.66$, and one alarm $26\%$ earlier than predicted.
+Observed afterwards, gated monitors with a median alarm inside the window alarmed $7$--$26\%$ earlier than predicted, so for them the rule errs towards over-provisioning a budget.
 
 \paragraph{Registered regimes.}
 The regime map predicted that past-paced gating would hold coverage better than a fixed rate when disagreement rises (regime R7). Under \texttt{harmful\_adaptation} the simpler fixed rate was equal or better in detection at every budget
@@ -189,7 +226,7 @@ The PPI proxy adds nothing over gated HT in \texttt{boundary\_local\_harm} and l
 
 Under a policy intervention the disagreement rate rises, and the monitor must choose between a fixed gating rate set from validation data and a past-paced rate that lowers $q$ as disagreements arrive.
 We vary the intervention strength $s$, the probability that a post-intervention event is forced to the positive action
-($s\in\{0.10,0.25,0.50,0.75,1.00\}$; post-onset disagreement $0.12$--$0.41$), across the four budgets with $100$ fresh streams per cell (seeds $61000000$--$61000099$, $2{,}000$ streams in all).
+($s\in\{0.10,0.25,0.50,0.75,1.00\}$; disagreement $0.09$ before onset and $0.12$--$0.41$ after it on these sweep streams), across the four budgets with $100$ fresh streams per cell (seeds $61000000$--$61000099$, $2{,}000$ streams in all).
 
 \begin{figure}[t]
 \centering
@@ -249,5 +286,6 @@ that a deployment can set in advance.
 \paragraph{A detectability map.}
 Full feedback detects from $s=0.50$ ($0.95$). The primary gated HT arms reach $0.87$--$0.99$ at $r=0.20$ for $s\ge0.50$ (fixed rate $0.95$--$0.99$), and $0.56$--$0.86$ at $r=0.10$ for $s\ge0.75$.
 At $r\le0.05$ they reach at most $0.29$ at every strength, where uniform PPI detects $0.00$.
+Each cell has $100$ streams, so an exact $95\%$ interval extends at most about $10$ points either side (paced $0.87$: $0.79$--$0.93$).
 Detection rises with both the budget and the intervention strength.
 Pre-onset alarm rates stay at or below $1/100$ per cell for every primary arm (exact $95\%$ upper bound $4.7\%$); the PPE alias has one cell at $3/100$.

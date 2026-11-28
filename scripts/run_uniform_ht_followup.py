@@ -69,7 +69,13 @@ def one_task(task: tuple) -> list[dict]:
     assert np.all(np.abs(values) <= bounds * (1 + 1e-9))
     values = np.clip(values, -bounds, bounds)
     gains = np.log1p(values[:, None] * np.asarray(gmc.DEFAULT_STAKES) / bounds[:, None])
-    pair = gmc.paired_growth(gated["gated_ht_paced"].component_log_gains, gains, onset)
+    gated_gains = gated["gated_ht_paced"].component_log_gains
+    pair = gmc.paired_growth(gated_gains, gains, onset)
+    # Post-onset mean log-gain of every grid stake, on the same common prefix.
+    by_stake = [
+        None if pair["first"] is None else g[onset : pair["prefix"]].mean(axis=0).tolist()
+        for g in (gated_gains, gains)
+    ]
 
     logs = {
         "uniform_ht": gmc.replay_mixture_log_e(values, float(bounds[0]), alpha=0.05),
@@ -100,6 +106,8 @@ def one_task(task: tuple) -> list[dict]:
                 "gated_labels": base["gated_ht_paced"]["labels"],
                 "gated_growth": pair["first"],
                 "uniform_growth": pair["second"],
+                "gated_stake_growth": by_stake[0],
+                "uniform_stake_growth": by_stake[1],
             }
         )
         assert rows[-1]["labels"] == base["uniform_ppi"]["labels"]

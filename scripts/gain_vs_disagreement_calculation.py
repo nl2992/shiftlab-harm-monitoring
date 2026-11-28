@@ -22,8 +22,8 @@ from shiftlab.decision_harm_experiment import (
 from shiftlab.dive.experiment import _binary_cost
 
 
-def path(scenario_name: str, strength: float, threshold: float, seed: int):
-    """Post-onset disagreements and paired costs, built as in comparison_seed."""
+def path(scenario_name: str, strength: float, threshold: float, seed: int, start: int = 1600):
+    """Disagreements and paired costs from event `start`, built as in comparison_seed."""
     scenario = next(s for s in SCENARIOS if s.name == scenario_name)
     config = ExperimentConfig(
         n=3200, d=16, evaluation_seeds=1, calibration_seeds=2, calibration_start=800, window=64,
@@ -43,7 +43,7 @@ def path(scenario_name: str, strength: float, threshold: float, seed: int):
     reference = _source_action(x, scenario)
     fn, fp = scenario.fn_cost, scenario.fp_cost
     cost = _binary_cost(deployed, y, fn, fp) - _binary_cost(reference, y, fn, fp)
-    return (deployed != reference)[1600:], cost[1600:]
+    return (deployed != reference)[start:], cost[start:]
 
 
 def main() -> None:
