@@ -25,3 +25,16 @@ registered results were known. It does not replace them.
   gated PPI arms 0.71 or more, and the gated empirical-Bernstein arm 0.36 at r = 0.02 (the
   registered run reported 0.82-1.00 for all gated arms).
 - No harm monitor alarmed in the stationary or benign-nuisance cells.
+
+## Null calibration
+
+Script `scripts/replicate_gated_null_calibration_cpu.py`; output `outputs/gated_monitor_null_rerun/`.
+The registered seeds 58500000-58501999, 2,000 streams per null scenario and budget, analysed with the
+registered `calibrate` function. New draws on the CPU generator, as above.
+
+| Quantity | Registered run (CUDA) | CPU replication |
+|---|---|---|
+| gated HT paced, alarms per 2,000 by cell | 0-6 | 1-5 |
+| gated HT paced, largest simultaneous exact upper bound | 0.764% | 0.689% |
+| Largest upper bound in the panel (PPE gated) | 1.953% (24/2,000) | 2.139% (27/2,000) |
+| Arms passing the 5% bound | all | all |

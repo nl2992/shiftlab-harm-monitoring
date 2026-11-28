@@ -60,7 +60,7 @@ S.text(2, 17, "a", size=16, weight="bold")
 S.text(392, 17, "b", size=16, weight="bold")
 # left text column
 LC = SEM["ours"]
-S.text(10, 56, "Same label spend <i>r</i>.", size=10.5, fill=LC)
+S.text(10, 56, "Same label budget <i>r</i>.", size=10.5, fill=LC)
 S.text(10, 71, "What changes is the", size=10.5, fill=LC)
 S.text(10, 88, "<m>second moment</m>", size=10, fill=LC)
 S.text(10, 103, "and the", size=10.5, fill=LC)

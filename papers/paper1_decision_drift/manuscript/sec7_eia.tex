@@ -33,7 +33,7 @@ Table~\ref{tab:eia} reports detection over $200$ query replicates per cell, and 
 
 \begin{table}[t]
 \centering
-\caption{EIA injected harm over the ten cells with detectable harm, by budget. An entry $k/10$ counts cells with detection $1.00$ (``$k/10$ detect'': cells with any detection); other entries give detection rates across the ten cells.}
+\caption{EIA injected harm over the ten cells with detectable harm, by budget. ``$k/10$'' means detection $1.00$ in $k$ of the ten cells, and ``$2/10$ detect'' means any detection in two cells; other entries give the range or maximum of detection rates across the ten cells.}
 \label{tab:eia}
 \begin{tabular}{lcccc}
 \toprule
@@ -47,7 +47,7 @@ ungated HT & $0.00$--$0.48$ & $0.00$--$1.00$ & $0.02$--$1.00$ & $0.06$--$1.00$ \
 \end{tabular}
 \end{table}
 
-From a $5\%$ budget upward, fixed gating matches the full-feedback median delay in all ten cells (for example $1{,}232$ hours for both on CISO-2026 with a $50\%$ onset), using $338$ to $701$ labels.
+From a $5\%$ budget upward, fixed gating, which on these paths labels every disagreement ($q_D=1$), matches the full-feedback median delay in all ten cells (for example $1{,}232$ hours for both on CISO-2026 with a $50\%$ onset), using $338$ to $701$ labels.
 At $r=0.05$ ungated HT is slower in that cell ($1{,}884$ hours), and at $r=0.20$ on ERCO-2026 with a $75\%$ onset it detects $6\%$ of replicates while every gated HT arm detects all of them.
 At $r=0.02$ the reserve of about $140$--$170$ labels runs out before the summer harm, which explains the low fixed-gating detection in that column.
 

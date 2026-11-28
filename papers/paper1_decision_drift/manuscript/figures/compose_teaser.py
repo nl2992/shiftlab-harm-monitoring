@@ -117,6 +117,6 @@ S.text(330, 213, "100 events of one stream, harm active", size=9.2, fill=C["gtxt
 S.text(2, 238, "b", size=16, weight="bold")
 S.inline_svg(10, 238, 288, 96, curve_asset("uniform", SEM["uniform"], "uniform", "never alarms", SEM["uniform"]))
 S.inline_svg(322, 238, 288, 96, curve_asset("gated_ht_fixed", SEM["ours"], "gated", "alarm at event %d" % alarms["gated_ht_fixed"], SEM["ours"]))
-banner_arrow(S, 6, 340, 612, 28, "<b>7.2×</b> the evidence at equal spend (<i>r</i> = 0.20); 100 wins, 0 losses at <i>r</i> = 0.05", size=11)
+banner_arrow(S, 6, 340, 612, 28, "<b>7.2×</b> the evidence at the same budget (<i>r</i> = 0.20); 100 wins, 0 losses at <i>r</i> = 0.05", size=11)
 S.save(HERE / "fig_teaser")
 print("seed", seed, "window", start, "uniform", n_u, n_u_on, "gated", n_g, alarms)

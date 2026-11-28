@@ -19,13 +19,13 @@ The registered uniform comparator (uniform PPI) adds a ridge proxy $h_t$, $Z_t=-
 the growth calculation below takes $h_t=0$ under that arm's bound.
 \emph{Gated} labelling never queries an agreement, since its cost is known to be zero, and queries a disagreement with
 probability $q_t$, giving $Z_t=-\varepsilon+A_tL_tc_t/q_t$ with predictable support bound $B_t=5/q_t+\varepsilon$.
-Gating at rate $q_D=\min(1,r\,\bar\kappa_{\mathrm{val}}/\overline{A\kappa}_{\mathrm{val}})$ spends the same expected label budget
-as uniform labelling at rate $r$ ($\kappa_t$ is the price of label $t$, and bars are validation-window means).
+Gating at rate $q_D=\min(1,r\,\bar\kappa_{\mathrm{val}}/\overline{A\kappa}_{\mathrm{val}})$ spends in expectation the same label budget
+as uniform labelling at rate $r$, or less when $q_D=1$ ($\kappa_t$ is the price of label $t$, and bars are validation-window means).
 
 \paragraph{Growth.}
 With stake $\lambda$ the e-process multiplies by $1+\lambda Z_t/B_t$, so the per-event growth is
 $G(\lambda)=\mathbb E\log(1+\lambda Z_t/B_t)$ and the monitor uses the stake grid $\{0.05,0.1,0.2,0.4,0.8\}$.
-For an interior optimum, $G\approx\mu^2/(2\,\mathbb E Z^2)$ with $\mu$ the mean excess cost, so the ratio of growth rates is
+For a small signal and an interior optimum, $G\approx\mu^2/(2\,\mathbb E Z^2)$ with $\mu$ the mean excess cost, so the ratio of growth rates is
 the ratio of second moments:
 \[
 \frac{G_{\mathrm{gated}}}{G_{\mathrm{unif}}}\;\approx\;\frac{\mathbb E Z_u^2}{\mathbb E Z_g^2}\;\approx\;
@@ -33,7 +33,7 @@ the ratio of second moments:
 \]
 When $q_D=r/\rho<1$ this is $1/\rho$: the gated monitor pays only for events that carry information.
 When the budget covers every disagreement ($q_D=1$) it is $1/r$. In both regimes the ratio is
-$\min(1/\rho,1/r)$. This is the $1/\rho$ label saving of paired auditing~\citep{discern}, restated as an evidence-growth ratio at matched spend.
+$\min(1/\rho,1/r)$. This is the $1/\rho$ label saving of paired auditing~\citep{discern}, restated as an evidence-growth ratio under a common budget.
 
 \paragraph{Support bounds enlarge the gain.}
 A bounded e-process cannot stake more than $B$ allows: with a stake grid capped at $0.8$ the effective bet per unit of $Z$ is $\lambda/B$.
@@ -64,7 +64,7 @@ $r$ & Small-signal & Uncapped & Reg.\ grid & Reg.\ prediction & Measured & No pr
 \begin{figure}[t]
 \centering
 \includegraphics[width=\linewidth]{figures/fig_growth2.pdf}
-\caption{The gating gain is predicted within $15\%$ at every label budget. \textbf{a} At the same label spend $r$, gated and uniform labelling differ in the second moment of the increment $Z$ and in its support bound $B$ (bars drawn to scale at $r=0.20$); changed terms are in magenta. The uniform bar is the uniform PPI bound ($45.9$ at $r=0.20$), used with $h_t=0$ as in the growth calculation.
+\caption{The gating gain is predicted within $15\%$ at every label budget. \textbf{a} At the same label budget $r$, gated and uniform labelling differ in the second moment of the increment $Z$ and in its support bound $B$ (bars drawn to scale at $r=0.20$); changed terms are in magenta. The uniform bar is the uniform PPI bound ($45.9$ at $r=0.20$), used with $h_t=0$ as in the growth calculation.
 \textbf{b} Gated-to-uniform evidence growth: the variance ratio fixes the order of magnitude, the growth calculation with each arm's bound and the registered stake grid tracks the measured ratio, and the registered prediction (red diamonds) was made before any monitor run.}
 \label{fig:growth}
 \end{figure}
@@ -80,7 +80,7 @@ The deployed classifier uses a fixed $0.5$ threshold; the reference is the cost-
 (false-negative cost $5$, false-positive cost $1$, tariffs in $[0.5,2.5]$, tolerance $\varepsilon=0.1$, $\alpha=0.05$).
 Scenarios are \texttt{stationary} and \texttt{benign\_nuisance} (null controls), \texttt{boundary\_local\_harm}
 (an adverse conditional-mean increase localised near the source decision boundary), and \texttt{harmful\_adaptation}
-(stationary outcomes, with a policy intervention at event $1600$ that sets actions positive and lifts disagreement from about $8\%$ to $41\%$).
+(stationary outcomes, with a policy intervention at event $1600$ that sets actions positive and lifts disagreement from about $9\%$ to $42\%$).
 
 \paragraph{Arms.}
 Gated: Horvitz--Thompson (HT) at a fixed rate $q_D$ (\texttt{gated\_ht\_fixed}) and at an online-paced rate from a past-only $200$-event tariff window,
@@ -111,6 +111,7 @@ Every registered arm passed the $5\%$ bound; the largest upper bound anywhere wa
 Both pass. At $r=0.20$ the paced gated monitor's growth is $7.20\times$ the correctly bounded uniform PPI monitor's (95\% interval $6.88$--$7.55$).
 At $r=0.05$ gating wins $100$ discordant streams and loses none (McNemar one-sided $p=7.9\times10^{-31}$).
 Table~\ref{tab:r05} lists detection, delay and labels at about equal spend.
+At $r=0.20$ the budget exceeds the disagreement rate, so gating labels every disagreement and leaves budget unused: in the CPU replication it uses $207$ labels against uniform labelling's $471$.
 
 \begin{table}[!h]
 \centering
@@ -135,6 +136,7 @@ We reran the comparison's seeds on a second random generator (CPU in place of CU
 the growth ratio at $r=0.20$ is $7.77\times$ ($95\%$ interval $7.38$--$8.20$) and gating wins $100$ discordant streams to none at $r=0.05$.
 The measured ratios across budgets ($21.4/19.1/15.2/7.8$) are within $7\%$ of the growth calculation of Table~\ref{tab:prediction} and within $19\%$ of the registered prediction.
 At $r\le0.05$ gated HT arms detect $0.80$ to $1.00$ and the registered ungated arms at most $0.03$.
+Null calibration also passes again on $2{,}000$ streams per cell: the paced gated-HT arm raises $1$ to $5$ alarms (largest simultaneous exact upper bound $0.689\%$), and every arm stays below the $5\%$ bound (largest $2.139\%$).
 
 \paragraph{Uniform labelling without a proxy.}
 In an exploratory follow-up on the same CPU streams, we added uniform HT labelling without a proxy, under its own bound $5/r+\varepsilon$ and with the same queries and labels as uniform PPI.
@@ -165,12 +167,12 @@ We vary the intervention strength $s$, the probability that a post-intervention 
 \begin{figure}[t]
 \centering
 \includegraphics[width=0.86\linewidth]{figures/fig_pacing2.pdf}
-\caption{Pacing trades detection delay for monitoring horizon at equal detection rates. \textbf{a} One registered \texttt{harmful\_adaptation} stream ($s=1$, $r=0.10$, seed $61000000$): the fixed-rate monitor's label reserve runs dry at event $1{,}248$ and it alarms at $1{,}217$; the paced monitor is still watching at event $2{,}195$ and alarms at $2{,}054$.
+\caption{Pacing trades detection delay for monitoring horizon at similar detection rates. \textbf{a} One registered \texttt{harmful\_adaptation} stream ($s=1$, $r=0.10$, seed $61000000$): the fixed-rate monitor's label reserve runs dry at event $1{,}248$ and it alarms at $1{,}217$; the paced monitor is still watching at event $2{,}195$ and alarms at $2{,}054$.
 \textbf{b} Pooled over $r\in\{0.05,0.10\}$ and $s\ge0.5$ (100 seeds per cell), fixed minus paced detection has a bootstrap $95\%$ interval containing zero at every strength. \textbf{c} Censored detection delay where both monitors detect.}
 \label{fig:pacing}
 \end{figure}
 
-\paragraph{Detection is unchanged by pacing.}
+\paragraph{Pooled detection is similar with and without pacing.}
 Pooled over the $1{,}900$ harm-path rows, fixed minus paced detection is $+0.005$ (bootstrap $95\%$ interval $-0.006$ to $+0.016$) with the registered betting engine
 and $-0.006$ ($-0.018$ to $+0.006$) with Timans GRAPA (Table~\ref{tab:pacing}).
 
@@ -218,7 +220,7 @@ At $r=0.05$ the delay gain is smaller ($3$--$7\%$), and at $r=0.20$ the floor ha
 that a deployment can set in advance.
 
 \paragraph{A detectability map.}
-Full feedback detects from $s=0.50$ ($0.95$). Gated monitors reach $0.87$--$0.99$ at $r=0.20$ for $s\ge0.50$, and $0.56$--$0.86$ at $r=0.10$ for $s\ge0.75$.
+Full feedback detects from $s=0.50$ ($0.95$). The primary gated HT arms reach $0.87$--$0.99$ at $r=0.20$ for $s\ge0.50$ (fixed rate $0.95$--$0.99$), and $0.56$--$0.86$ at $r=0.10$ for $s\ge0.75$.
 At $r\le0.05$ they reach at most $0.29$ at every strength, where uniform PPI detects $0.00$.
 Detection rises with both the budget and the intervention strength.
 Pre-onset alarm rates stay at or below $1/100$ per cell for every primary arm (exact $95\%$ upper bound $4.7\%$); the PPE alias has one cell at $3/100$.
