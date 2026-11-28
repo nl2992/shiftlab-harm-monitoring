@@ -148,6 +148,33 @@ gated HT leads at $r=0.10$ ($0.80$ against $0.46$; $0.87$ against $0.53$ with GR
 at $r=0.05$ it leads with the registered engine ($0.20$ against $0.05$) and is indistinguishable with GRAPA ($0.23$ against $0.28$; two-sided McNemar $p=0.44$).
 Uniform HT raised no alarm in the null cells ($100$ streams each).
 
+\paragraph{The prediction at other disagreement rates.}
+In a further exploratory study ($2{,}400$ fresh streams, seeds $63100000$--$63100099$ per setting), we changed the disagreement rate through the deployed threshold ($0.35$ in place of $0.5$) and through the intervention strength ($s=0.50,0.75,1$).
+Before any monitor run we fixed the prediction $q/r$ against uniform HT without a proxy, with $q=\min\{1,\max(0.10,r/\rho)\}$, which equals $\min(1/\rho,1/r)$ unless the pacer's floor binds, and a $15\%$ tolerance.
+Here $\rho$ is the post-onset disagreement rate; it needs no labels, though under an intervention it is seen only once the intervention happens.
+Measured growth is the best fixed stake per stream on the common post-onset window, averaged over streams.
+The prediction holds in $15$ of $20$ cells, including all ten at $r\ge0.10$ (within $12\%$; Table~\ref{tab:rho}), and gated detection is at least uniform detection in every cell.
+The five misses are at $r\le0.05$ and fall below the prediction.
+A post-hoc diagnostic points mainly to the estimator: choosing each stream's stake after seeing its path inflates a small, noisy growth rate, here more for the uniform arm, and applying it to simulated query coins on the same paths reproduces most of the shortfall in four of the five cells.
+No arm alarmed in the stationary check at threshold $0.35$.
+
+\begin{table}[!h]
+\centering\small
+\caption{Gated-to-uniform (no proxy) growth ratio, measured / predicted. $\dagger$ outside the $15\%$ tolerance; $*$ pacer floor binds.}
+\label{tab:rho}
+\begin{tabular}{llrcccc}
+\toprule
+Setting & Change & $\rho$ & $r=0.02$ & $r=0.05$ & $r=0.10$ & $r=0.20$ \\
+\midrule
+A & threshold $0.35$ & 0.05 & $10.4/19.9^\dagger$ & $14.8/19.9^\dagger$ & $9.8/10.0$ & $5.0/5.0$ \\
+B & registered pair & 0.08 & $9.1/11.9^\dagger$ & $12.3/11.9$ & $10.0/10.0$ & $5.1/5.0$ \\
+C & $s=0.50$ & 0.25 & $3.5/5.0^{*\dagger}$ & $3.3/4.0^\dagger$ & $3.8/4.0$ & $3.9/4.0$ \\
+D & $s=0.75$ & 0.34 & $4.4/5.0^*$ & $3.1/3.0$ & $3.1/3.0$ & $3.1/3.0$ \\
+E & $s=1$ & 0.42 & $4.5/5.0^*$ & $2.5/2.4$ & $2.7/2.4$ & $2.5/2.4$ \\
+\bottomrule
+\end{tabular}
+\end{table}
+
 \paragraph{Registered regimes.}
 The regime map predicted that past-paced gating would hold coverage better than a fixed rate when disagreement rises (regime R7). Under \texttt{harmful\_adaptation} the simpler fixed rate was equal or better in detection at every budget
 ($0.86$ against $0.76$ at $r=0.10$). Section~\ref{sec:pacing} follows up this result and identifies what each rule is good for.

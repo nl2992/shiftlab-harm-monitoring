@@ -5,6 +5,7 @@ We study this selective-label harm monitoring problem with anytime-valid betting
 Querying only the events where the two policies disagree raises evidence growth by $7.20\times$ over uniform prediction-powered labelling under the same label budget
 (95\% interval $6.88$--$7.55$) and wins $100$ of $100$ discordant detection comparisons at a $5\%$ budget.
 A growth-rate prediction registered before the monitor runs matches the measured gain within $15\%$ at every budget, and per-event growth computed with each arm's own support bound explains it.
+Across disagreement rates from $5\%$ to $42\%$, an exploratory study finds the gain over no-proxy uniform labelling within $15\%$ of its pre-stated value in $15$ of $20$ cells, including all ten at budgets of $10\%$ or more.
 When a policy intervention raises disagreement from $9\%$ to $41\%$, past-paced gating keeps the monitor running $1.9\times$ longer
 than fixed-rate gating at identical label counts, detects about as often, and takes $1.4$--$2\times$ longer to alarm.
 A sweep over $5$ intervention strengths and $4$ budgets gives operators a budgeting map: at a $20\%$ budget gated Horvitz--Thompson monitors reach $0.87$ to $0.99$ detection once

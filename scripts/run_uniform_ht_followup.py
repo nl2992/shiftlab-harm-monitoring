@@ -28,7 +28,7 @@ _one = gmc._one_method
 
 
 def one_task(task: tuple) -> list[dict]:
-    scenario, budget, seed = task
+    scenario, budget, seed, *variant = task  # variant: adaptation strength, deployed threshold
     gated, traces = {}, []
 
     def capture_gated(**kwargs):
@@ -44,7 +44,7 @@ def one_task(task: tuple) -> list[dict]:
 
     gmc.replay_gated, gmc._one_method = capture_gated, capture_uniform
     try:
-        records = gmc.comparison_seed(scenario, seed, budget, "cpu")
+        records = gmc.comparison_seed(scenario, seed, budget, "cpu", *variant)
     finally:
         gmc.replay_gated, gmc._one_method = _replay, _one
     base = {r["arm"]: r for r in records}
@@ -93,6 +93,11 @@ def one_task(task: tuple) -> list[dict]:
                 else (alarm - onset if detected else max(0, 2400 - onset)),
                 "labels": int(queried.sum()),
                 "processed": len(values),
+                "disagreement_post": base["gated_ht_paced"]["disagreement_post"],
+                "gated_detected": base["gated_ht_paced"]["detected"],
+                "gated_false_alarm": base["gated_ht_paced"]["false_alarm"],
+                "gated_delay": base["gated_ht_paced"]["censored_delay"],
+                "gated_labels": base["gated_ht_paced"]["labels"],
                 "gated_growth": pair["first"],
                 "uniform_growth": pair["second"],
             }
