@@ -5,7 +5,10 @@ registered panel arm, so the disjoint S3 comparison is allowed. This result cont
 only the registered synthetic stationary and benign-nuisance nulls; it is not a
 real-data or universal validity guarantee.
 
-The run used 2,000 streams in each scenario/budget cell, seeds 58300000–58301999,
+Correction added 2026-11-27: this note originally listed seeds 58300000–58301999. The frozen protocol,
+run script and analysis script (which rejects any other block) all use 58500000–58501999.
+
+The run used 2,000 streams in each scenario/budget cell, seeds 58500000–58501999,
 for stationary and benign-nuisance scenarios and budgets {.02,.05,.10,.20}.
 All 16,000 registered generation tasks completed on CUDA with five CPU replay
 workers in 17,948.34 seconds. It started from clean committed implementation HEAD

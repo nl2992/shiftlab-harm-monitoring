@@ -21,7 +21,7 @@ registered results were known. It does not replace them.
 
 - Against the registered prediction (18/18/15/7.5) the CPU ratios differ by 19%, 6%, 1% and 4%.
   Against the registered-grid growth calculation (20.0/19.7/15.5/7.6) they differ by at most 7%.
-- Boundary harm at r <= 0.05: ungated arms detect at most 0.03. Gated HT arms detect 0.80-1.00,
+- Boundary harm at r <= 0.05: registered ungated arms detect at most 0.03. Gated HT arms detect 0.80-1.00,
   gated PPI arms 0.71 or more, and the gated empirical-Bernstein arm 0.36 at r = 0.02 (the
   registered run reported 0.82-1.00 for all gated arms).
 - No harm monitor alarmed in the stationary or benign-nuisance cells.

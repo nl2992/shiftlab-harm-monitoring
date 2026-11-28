@@ -2,7 +2,7 @@
 A deployed model is replaced or adapted, and the team wants to know, as labels trickle in, whether its decisions cost more than a reference policy's.
 Labels are expensive, so the monitor must choose which events to pay for.
 We study this selective-label harm monitoring problem with anytime-valid betting e-processes and a pre-registered protocol.
-Querying only the events where the two policies disagree raises evidence growth by $7.20\times$ at matched label spend
+Querying only the events where the two policies disagree raises evidence growth by $7.20\times$ over uniform prediction-powered labelling at matched label spend
 (95\% interval $6.88$--$7.55$) and wins $100$ of $100$ discordant detection comparisons at a $5\%$ budget.
 A growth-rate prediction registered before the monitor runs matches the measured gain within $15\%$ at every budget, and per-event growth computed with each arm's own support bound explains it.
 When a policy intervention raises disagreement from $8\%$ to $41\%$, past-paced gating keeps the monitor running $1.9\times$ longer
@@ -31,24 +31,25 @@ and detection-delay consequence at the operator's actual budget, and the behavio
 \centering
 \includegraphics[width=\linewidth]{figures/fig_teaser.pdf}
 \caption{Gating spends the label budget where labels can teach, and the evidence shows it. \textbf{a} A deployed and a reference policy score each event; where they agree the paired cost is exactly zero. Uniform labelling at budget $r=0.05$ puts all four of its labels in this window on agreements ($\times$), while gating puts all five on disagreements ($\checkmark$).
-\textbf{b} Log-evidence on the same registered \texttt{boundary\_local\_harm} stream (seed $58400000$): gated labelling crosses the alarm threshold after harm onset (event $800$) at event $961$, matching full feedback, and uniform labelling never alarms. Panel a's robots and scales are schematic; the strips and curves are real.}
+\textbf{b} Log-evidence on the same registered \texttt{boundary\_local\_harm} stream (seed $58400000$): gated labelling crosses the alarm threshold after harm onset (event $800$) at event $961$, matching full feedback, and uniform PPI never alarms. Panel a's robots and scales are schematic; the strips and curves are real.}
 \label{fig:overview}
 \end{figure}
 
 We address both with a pre-registered study of selective-label harm monitoring. Our contributions are:
 \begin{itemize}
-\item At matched label spend, disagreement gating grows evidence $7.20\times$ faster than correctly bounded uniform labelling at a $20\%$ budget
+\item At matched label spend, disagreement gating grows evidence $7.20\times$ faster than correctly bounded uniform PPI at a $20\%$ budget
 (95\% interval $6.88$--$7.55$) and wins $100$ to $0$ in discordant detection comparisons at $5\%$ ($p=7.9\times10^{-31}$), with null calibration on $2{,}000$ streams per cell.
 \item A growth-rate prediction registered before the monitor runs ($18/18/15/7.5$ across the four budgets) matches the measured ratios
 ($17.5/20.6/14.7/7.2$) within $15\%$. Per-event log-growth of an inverse-propensity betting e-process, computed with each arm's own support bound,
 accounts for it: the variance argument gives $\min(1/\rho,1/r)$ and the support-bound range penalty accounts for the rest.
+An exploratory follow-up against uniform labelling without a proxy measures $12.8/11.5/9.5/5.1$, within $8\%$ of $\min(1/\rho,1/r)$.
 \item Pacing the query rate to past disagreement keeps the monitor alive longer under a policy intervention but does not change how often it detects,
 and it lengthens detection delay by a factor of $1.4$ to $2$ through the same range penalty.
 \item Over $2{,}000$ streams spanning five intervention strengths and four budgets, detection rises with both,
-which tells an operator what budget to provision; at $5\%$ or less, gated monitors reach up to $0.29$ where uniform labelling detects nothing.
+which tells an operator what budget to provision; at $5\%$ or less, gated monitors reach up to $0.29$ where uniform PPI detects nothing.
 \item Registered regime predictions with falsification criteria, covering full feedback, ample and scarce label budgets, policy adaptation and live data,
 are evaluated against Timans GRAPA, Xu active betting, prediction-powered e-values and empirical-Bernstein engines under identical gating, bounds, budgets and query coins:
-at budgets of $5\%$ or less on localised harm, gated arms detect $0.82$ to $1.00$ and ungated arms at most $0.01$.
+at budgets of $5\%$ or less on localised harm, gated arms detect $0.82$ to $1.00$ and the registered ungated arms at most $0.01$.
 \item On four electricity-demand paths, all $68$ registered null cells raise no alarm, and under injected under-procurement fixed gating matches the full-feedback median delay in all ten harm cells from a $5\%$ budget upward, using $338$ to $701$ labels.
 \end{itemize}
 

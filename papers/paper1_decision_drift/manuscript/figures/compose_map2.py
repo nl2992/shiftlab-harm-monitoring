@@ -22,7 +22,8 @@ d = pd.read_parquet(HERE.parents[3] / "outputs/r7_sweep/streams.parquet")
 d = d[d.onset.notna()]
 g = d[d.arm == "gated_ht_fixed"].groupby(["adaptation_strength", "budget_rate"]).detected.mean().unstack()
 u = d[d.arm == "uniform_ppi"].groupby(["adaptation_strength", "budget_rate"]).detected.mean().unstack()
-assert g.loc[:, [0.02, 0.05]].values.max() <= 0.29 and u.loc[:, [0.02, 0.05]].values.max() == 0.0
+gv = d[d.arm.str.startswith(("gated", "ppe_gated"))].groupby(["arm", "adaptation_strength", "budget_rate"]).detected.mean()
+assert gv[gv.index.get_level_values("budget_rate") <= 0.05].max() <= 0.29 and u.loc[:, [0.02, 0.05]].values.max() == 0.0
 rows = list(g.index)[::-1]
 cols = list(g.columns)
 
@@ -72,8 +73,8 @@ bx0, bx1, by = X0 + 2, X0 + 2 * CW - 2, Y0 + len(rows) * CH + 33
 brace_down(S, bx0, bx1, by, h=6)
 S.text((bx0 + bx1) / 2, by + 26, "<b>r ≤ 0.05</b>", size=10.5, anchor="middle")
 S.rect(8, 250, 288, 44, fill="#E3EFFB", rx=12)
-S.text(152, 266, "Gated monitors stay <b>≤ 0.29</b> at every strength", size=10, anchor="middle")
-S.text(152, 282, "when <i>r</i> ≤ 0.05; uniform labelling detects <b>0.00</b>.", size=10, anchor="middle")
+S.text(152, 266, "All gated variants stay <b>≤ 0.29</b> at every strength", size=10, anchor="middle")
+S.text(152, 282, "when <i>r</i> ≤ 0.05; uniform PPI detects <b>0.00</b>.", size=10, anchor="middle")
 
 # ---- b: direct-labelled lines
 plt.rcParams.update({"font.family": "sans-serif", "font.sans-serif": ["Helvetica", "Arial"], "svg.fonttype": "none", "font.size": 9,
@@ -85,7 +86,7 @@ for r, col in shades.items():
     ax.plot(ss, g[r].values, marker="o", ms=4, color=col, lw=2.0)
     ax.text(ss[-1] + 0.03, g[r].values[-1] + {0.10: -0.03, 0.20: 0.025}.get(r, 0), "gated, $r$=%g" % r, color=col, fontsize=8.5, va="center", fontweight="bold")
 ax.plot(ss, u[0.20].values, marker="o", ms=4, color=SEM["uniform"], lw=2.0, ls="--")
-ax.text(ss[-1] + 0.03, u[0.20].values[-1] + 0.0, "uniform, $r$=0.20", color=SEM["uniform"], fontsize=8.5, va="center", fontweight="bold")
+ax.text(ss[-1] + 0.03, u[0.20].values[-1] + 0.0, "uniform PPI, $r$=0.20", color=SEM["uniform"], fontsize=8.5, va="center", fontweight="bold")
 ax.set_xlim(0.08, 1.42)
 ax.set_ylim(-0.02, 1.1)
 ax.set_xticks(ss, ["%g" % s_ for s_ in ss])
